@@ -69,8 +69,12 @@ class Grid():
         cell1, cell2: tuple[int]
             The two cells to swap. They must be in the format (i, j) where i is the line and j the column number of the cell. 
         """
-        # TODO: implement this function (and remove the line "raise NotImplementedError").
-        raise NotImplementedError
+        if abs(cell1[0] - cell2[0]) + abs(cell1[1] - cell2[1]) == 1:
+            buff = self.state(cell1)
+            self.state[cell1] = self.state[cell2]
+            self.state[cell2] = buff
+        else:
+            raise EnvironmentError
 
     def swap_seq(self, cell_pair_list):
         """
