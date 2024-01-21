@@ -3,6 +3,7 @@ This is the grid module. It contains the Grid class and its associated methods.
 """
 
 import random
+import graph
 
 class IllegalMove(Exception):
     pass
@@ -128,4 +129,8 @@ class Grid():
             grid = Grid(m, n, initial_state)
         return grid
 
+    def id(self,m,n): #Injection des états de la grid dans N
+        
 
+    def graph_from_grid(self):
+        l = []
