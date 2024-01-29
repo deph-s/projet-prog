@@ -180,7 +180,6 @@ class Grid():
         l_ = [self.id(l) for l in swaps]
         return l_
         
-
     def adj_grids(self): # Renvoie tous les états de la grid (sous forme d'entiers) qu'on obtient à partir d'une permutation 
         allswaps = []    # depuis l'état actuel de la grid, permet de déterminer les arêtes à créer dans le graphe
         m,n = self.m, self.n
@@ -192,7 +191,10 @@ class Grid():
                         allswaps.append(p)
         return allswaps
 
+    def id_to_grid(self,n): # Opération inverse de id pour créer les arêtes, todo
+
     def graph_from_grid(self):
         m = self.m
         n = self
-        vertex_list = self.flatten()
+        v_ = [l for l in self.permutations(self.flatten())]
+        vertex_list = [self.id(l) for l in v_] # Encode sous forme d'entiers tous les sommets du graphe (donc les permutations)
