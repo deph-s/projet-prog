@@ -129,8 +129,70 @@ class Grid():
             grid = Grid(m, n, initial_state)
         return grid
 
-    def id(self,m,n): #Injection des états de la grid dans N
+    def id(self,l): # Injection des états de la grid dans N, représentation en base m*n+1
+        m = self.m
+        n = self.n
+        base = m*n+1
+        return sum(l[i]*(base)**i for i in range(len(l))) # Identifiant unique hashable
+
+    def flatten(self): # Permet de convertir la grid de base en une seule list de taille m*n et de calculer ses permutations 
+        l = []
+        m = self.m
+        for i in range(m):
+            for j in self.state[i]:
+                l.append(j)
+        return l
+
+    def copy(self):
+        cpy_state = []
+        for l in self.state:
+            cpy_state.append(l.copy())
+        g = Grid(self.m,self.n,cpy_state)
+        return g
+
+    def permutations(self,l):
+        if len(l) <= 1:
+            yield l
+            return
+        for perm in self.permutations(l[1:]):
+            for i in range(len(l)):
+                yield perm[:i] + l[0:1] + perm[i:]
+
+    def nextperm(self,i,j): # Renvoie les grids que l'on peut obtenir en permutant la case i,j de la grid 
+        swaps = []
+        m,n = self.m, self.n
+        if(i<n-1):
+            g = self.copy()
+            g.swap((i,j),(i+1,j))
+            swaps.append(g.flatten())
+        if(i>0):
+            g = self.copy()
+            g.swap((i,j),(i-1,j))
+            swaps.append(g.flatten())
+        if(j<m-1):
+            g = self.copy()
+            g.swap((i,j),(i,j+1))
+            swaps.append(g.flatten())
+        if(j>0):
+            g = self.copy()
+            g.swap((i,j),(i,j-1))
+            swaps.append(g.flatten())
+        l_ = [self.id(l) for l in swaps]
+        return l_
         
 
+    def adj_grids(self): # Renvoie tous les états de la grid (sous forme d'entiers) qu'on obtient à partir d'une permutation 
+        allswaps = []    # depuis l'état actuel de la grid, permet de déterminer les arêtes à créer dans le graphe
+        m,n = self.m, self.n
+        for i in range(m):
+            for j in range(n):
+                s = self.nextperm(i,j)
+                for p in s:
+                    if p not in allswaps:
+                        allswaps.append(p)
+        return allswaps
+
     def graph_from_grid(self):
-        l = []
+        m = self.m
+        n = self
+        vertex_list = self.flatten()
