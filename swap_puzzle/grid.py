@@ -129,7 +129,7 @@ class Grid():
             grid = Grid(m, n, initial_state)
         return grid
 
-    def id(self,l): # Injection des états de la grid dans N, représentation en base m*n+1
+    def id(self,l): # Injection des états de la grid dans N, représentation en base m*n+1 pour rendre les états hashable (Q6)
         m = self.m
         n = self.n
         base = m*n+1
@@ -143,14 +143,14 @@ class Grid():
                 l.append(j)
         return l
 
-    def copy(self):
+    def copy(self):    # Fonction utilitaire pour ajouter les arêtes entre sommets par la suite
         cpy_state = []
         for l in self.state:
             cpy_state.append(l.copy())
         g = Grid(self.m,self.n,cpy_state)
         return g
 
-    def permutations(self,l):
+    def permutations(self,l): # Calcule les permutations de la grid que l'on a flatten pour créer tous les sommets
         if len(l) <= 1:
             yield l
             return
@@ -191,10 +191,24 @@ class Grid():
                         allswaps.append(p)
         return allswaps
 
-    def id_to_grid(self,n): # Opération inverse de id pour créer les arêtes, todo
+    def id_to_grid(self,i,m,n): # Opération inverse de id pour créer les arêtes, i est l'entier représentant une grid
+        newgrid = [[] for i in range(m)]
+        print(newgrid)
+        for j in range(m):
+            subgrid = []
+            for k in range(n):
+                r = i % (m*n+1)
+                i -= r
+                i /= (m*n+1)
+                print(r)
+                subgrid.append(int(r)) # Cast esthétique parce que le typage est moche
+            newgrid[j] = subgrid
+        G = Grid(m,n,newgrid) # Faire attention, le poids faible est en premier et le poids fort en dernier dans la représentation
+        return G              # en base m*n+1 donc pour le nombre 123456789 (base 10) le poids faible est 9 et le fort est 1 
+                              # Donc la grid renvoyée est [[9, 8, 7], [6, 5, 4], [3, 2, 1]] et non l'inverse
 
     def graph_from_grid(self):
         m = self.m
         n = self
         v_ = [l for l in self.permutations(self.flatten())]
-        vertex_list = [self.id(l) for l in v_] # Encode sous forme d'entiers tous les sommets du graphe (donc les permutations)
+        vertex_list = [self.id(l) for l in v_] # Encode sous forme d'entiers tous les sommets du graph (donc les permutations)
