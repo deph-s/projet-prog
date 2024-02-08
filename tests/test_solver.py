@@ -15,3 +15,8 @@ class Test_Solver(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+G = Grid(2,2,[[1,2],[3,4]])
+
+graph = G.graph_from_grid()
+print(graph)

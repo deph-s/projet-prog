@@ -209,6 +209,13 @@ class Grid():
 
     def graph_from_grid(self):
         m = self.m
-        n = self
+        n = self.n
         v_ = [l for l in self.permutations(self.flatten())]
         vertex_list = [self.id(l) for l in v_] # Encode sous forme d'entiers tous les sommets du graph (donc les permutations)
+        G = Graph(vertex_list)
+        for node in G.nodes: # On ajoute les arêtes entre états de grid adjacents
+            state = self.id_to_grid(node,m,n)
+            adj_grids = state.adj_grids()
+            for v in adj_grids:
+                G.add_edge(node,v)
+        return G
