@@ -1,5 +1,6 @@
 import math
 from grid import Grid
+from graph import Graph, bfs
 
 class Solver(): 
     """
@@ -49,8 +50,11 @@ class Solver():
         
         
         """
-
-
+    def get_solution_not_opti(self,grid): # Aucun test de la fonction pour l'instant TODO 
+        src, dst = grid.path_to_do() 
+        state_graph = grid.graph_from_grid()
+        path = state_graph.bfs(src,dst)
+        return path
 
     def get_solution(self):
         """

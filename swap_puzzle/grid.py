@@ -219,3 +219,11 @@ class Grid():
             for v in adj_grids:
                 G.add_edge(node,v)
         return G
+
+    def path_to_do(self): # Renvoie l'id du sommet initial et du sommet d'arrivée dans le graph des états pour bfs
+        m,n = self.m, self.n 
+        base = m*n+1
+        dst = sum((i+1)*(base)**i for i in range(m*n))
+        l = self.flatten()
+        src = self.id(l)
+        return src,dst
