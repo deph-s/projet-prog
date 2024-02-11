@@ -4,6 +4,8 @@ This is the grid module. It contains the Grid class and its associated methods.
 
 import random
 import graph
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 class IllegalMove(Exception):
     pass
@@ -22,7 +24,7 @@ class Grid():
         The state of the grid, a list of list such that state[i][j] is the number in the cell (i, j), i.e., in the i-th line and j-th column. 
         Note: lines are numbered 0..m and columns are numbered 0..n.
     """
-    
+
     def __init__(self, m, n, initial_state = []):
         """
         Initializes the grid.
@@ -142,6 +144,18 @@ class Grid():
             for j in self.state[i]:
                 l.append(j)
         return l
+    
+    def show_grid(self): # Fonction qui apparaît un peu tard dans le code pour utiliser flatten
+        m,n = self.m, self.n
+        cmap = plt.get_cmap('plasma') # Juste pour faire des jolies couleurs, gradient par défaut qui rend bien
+        grid = self.flatten()
+        plt.imshow(grid, cmap=cmap, interpolation='nearest')
+        for i in range(m):
+            for j in range(n):
+                plt.text(j, i, grid[i][j], ha='center', va='center', color='white')
+        plt.title('Grid :')
+        plt.show()
+        
 
     def copy(self):    # Fonction utilitaire pour ajouter les arêtes entre sommets par la suite
         cpy_state = []
