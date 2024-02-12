@@ -2,6 +2,8 @@
 This is the graph module. It contains a minimalistic Graph class.
 """
 
+import heapq
+
 class Graph:
     """
     A class representing undirected graphs as adjacency lists. 
@@ -160,4 +162,31 @@ class Graph:
                 else:
                     raise Exception("Format incorrect")
         return graph
+    
+    def fact(self,n): # Pour calculer la taille maximale du graphe et la taille des listes des parents et des sommets explorés
+        if n == 0:
+            return 1
+        else:
+            return n*self.fact(n-1)
 
+    def bfs_generate_graph(self,src,dst,m,n):
+        maxsize = self.fact(m*n)
+        g = Grid(m,n)
+        queue = []
+        prev = [-1 for i in range(maxsize)]
+        explored = [False for i in range(maxsize)]
+        explored[src-1] = True
+        queue.append(src)
+        while not(len(queue) == 0):
+            v = queue.pop(0)
+            if v == dst:
+                return prev
+            cur_grid = g.id_to_grid(v,m,n) # Calcul de la grid actuelle
+            neighbours = cur_grid.adj_grids() # Calcul des grids voisines de la grid actuelle
+            neighbours = [g.id(g.flatten(n)) for n in neighbours] # Rend les états voisins hashable
+            for n in neighbours:
+                if not(explored[n-1]):
+                    explored[n-1] = True
+                    queue.append(n)
+                    prev[n-1] = v
+        return []

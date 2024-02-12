@@ -16,7 +16,9 @@ class Test_Solver(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
-G = Grid(2,2,[[1,2],[3,4]])
-
-graph = G.graph_from_grid()
-print(graph)
+class Test_Solver(unittest.TestCase):
+    def test_sol2(self):
+        G = Grid(2,2,[[1,2],[3,4]])
+        graph = G.graph_from_grid()
+        self.assertEqual(graph.nb_nodes, 24) # Tester qu'on a bien créé tous les sommets (4! = 24 états de la grid possible)
+        self.assertEqual(graph.nb_edges, 96) # Chaque sommet a 4 arêtes ici
