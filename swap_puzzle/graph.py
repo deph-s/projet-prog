@@ -3,6 +3,7 @@ This is the graph module. It contains a minimalistic Graph class.
 """
 
 import heapq
+import grid
 
 class Graph:
     """
@@ -103,9 +104,10 @@ class Graph:
     def get_path(self,src,dst,prev): #Fonction qui reconstruit le chemin le plus court à partir du bfs déjà effectué
         path = [dst]
         cur_node = dst-1
-        while not(prev[cur_node] == -1):
+        while not(prev[cur_node] == -1 or prev[cur_node] == src):
             cur_node = prev[cur_node]-1
             path.append(cur_node+1)
+        path.append(src)
         path.reverse()
         return path
 
@@ -170,12 +172,12 @@ class Graph:
             return n*self.fact(n-1)
 
     def bfs_generate_graph(self,src,dst,m,n):
-        maxsize = self.fact(m*n)
+        maxsize = (m*n+1)**(m*n+1)
         g = Grid(m,n)
         queue = []
         prev = [-1 for i in range(maxsize)]
-        explored = [False for i in range(maxsize)]
-        explored[src-1] = True
+        explored = []
+        explored.append(src-1)
         queue.append(src)
         while not(len(queue) == 0):
             v = queue.pop(0)
@@ -183,10 +185,60 @@ class Graph:
                 return prev
             cur_grid = g.id_to_grid(v,m,n) # Calcul de la grid actuelle
             neighbours = cur_grid.adj_grids() # Calcul des grids voisines de la grid actuelle
-            neighbours = [g.id(g.flatten(n)) for n in neighbours] # Rend les états voisins hashable
-            for n in neighbours:
-                if not(explored[n-1]):
-                    explored[n-1] = True
-                    queue.append(n)
-                    prev[n-1] = v
+            neighbours = [g.id_to_grid(v,m,n) for v in neighbours] # Rend les états voisins hashable
+            for ne in neighbours:
+                if not(g.id(ne.flatten()) in explored):
+                    explored.append(g.id(ne.flatten()))
+                    queue.append(g.id(ne.flatten()))
+                    prev[g.id(ne.flatten())-1] = v
         return []
+
+    def get_neighbours(self,v,m,n):
+        g = Grid(m,n)
+        cur_grid = g.id_to_grid(v,m,n) # Calcul de la grid actuelle
+        neighbours = cur_grid.adj_grids() # Calcul des grids voisines de la grid actuelle
+        neighbours = [(1,v) for v in neighbours] # Rend les états voisins hashable, coût de 1 entre sommets adj
+        return neighbours
+
+    def manhattan_distance(g1,g2):
+        acc = 0 
+        m,n = g1.m, g1.n
+        for i in range(m):
+            for j in range(n):
+                acc += abs(g1.state[i][j] - g2.state[i][j])
+        return acc
+
+    def bfs_a_star(self,src,dst,m,n,h): # h est l'heuristique à utiliser
+        open_list = [(0,src)] # Création de la liste des sommets à considérer (file de prio) avec le sommet initial (distance 0)
+        prev = {}
+        cost = {src: 0}
+        g = Graph([])
+        while(open_list):
+            cur_cost, cur_node = heapq.heappop(open_list)
+            if cur_node == dst:
+                path = [dst]
+                while cur_node in prev: # Permet de faire une boucle de manière intelligente sur le dictionnaire puisque  on va automatiquement s'arrêter quand on atteint src parce qu'il n'a pas de parent
+                    cur_node = prev[cur_node]
+                    path.append(cur_node)
+                path.reverse()
+                return path
+            neighbours = g.get_neighbours(cur_node,m,n) # voisins du sommet qu'on récupère sous une forme de liste déjà hash
+            for cost, ne in neighbours:
+                new_cost = cost[cur_node] + cost
+                if ne not in cost or new_cost < cost[ne]:
+                    cost[ne] = new_cost
+                    h_score = new_cost + h(ne,dst)
+                    heapq.heappush(open_list,(h_score,ne)) # On utilise le h_score donné par l'heuristique pour classer
+                    prev[ne] = cur_node
+        return None
+
+    def findswap(self,p,q,m,n):
+        g = Grid(1,1)
+        g1 = g.id_to_grid(p,m,n)
+        g2 = g.id_to_grid(q,m,n)
+        for i in range(m):
+            for j in range(n):
+                if g1.state[i][j] != g2.state[i][j]:
+                    
+
+    def path_to_swaplist(self,path): # Fonction finale qui récupère le plus court chemin dans le graphe et le conv en swaps
