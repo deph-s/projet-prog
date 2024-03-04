@@ -232,4 +232,10 @@ class Graph:
                     prev[ne] = cur_node
         return None
 
-    
+    def path_to_swap(self,path,m,n):
+        g = Grid(1,1)
+        swap_list = []
+        for i in range(len(path)-1):
+            swap = g.findswap(path[i],path[i+1],m,n)
+            swap_list.append(swap)
+        return swap_list

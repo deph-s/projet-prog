@@ -260,3 +260,13 @@ class Grid():
                     if j < m-1:
                         if g2.state[i][j] == g1.state[i][j-1]:
                             return ((i+1,j+1),(i+1,j+2))
+
+    def manhattan_distance(self,p,q,m,n):
+        g = Grid(1,1)
+        acc = 0 
+        g1 = g.id_to_grid(p,m,n)
+        g2 = g.id_to_grid(q,m,n)
+        for i in range(m):
+            for j in range(n):
+                acc += abs(g1.state[i][j] - g2.state[i][j])
+        return acc
