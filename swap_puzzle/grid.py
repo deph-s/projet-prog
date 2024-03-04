@@ -241,3 +241,22 @@ class Grid():
         l = self.flatten()
         src = self.id(l)
         return src,dst
+    
+    def findswap(self,p,q,m,n): # Renvoie le premier swap entre deux grids trouvé
+        g1 = self.id_to_grid(p,m,n)
+        g2 = self.id_to_grid(q,m,n)
+        for i in range(m):
+            for j in range(n):
+                if g1.state[i][j] != g2.state[i][j]:
+                    if i > 0:
+                        if g2.state[i-1][j] == g1.state[i][j]:
+                            return ((i,j+1),(i+1,j+1))
+                    if i < m-1:
+                        if g2.state[i][j] == g1.state[i+1][j]:
+                            return ((i+1,j+1),(i+2,j+1))
+                    if j > 0:
+                        if g2.state[i][j] == g1.state[i][j-1]:
+                            return ((i+1,j),(i+1,j+1))
+                    if j < m-1:
+                        if g2.state[i][j] == g1.state[i][j-1]:
+                            return ((i+1,j+1),(i+1,j+2))

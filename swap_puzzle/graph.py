@@ -232,13 +232,4 @@ class Graph:
                     prev[ne] = cur_node
         return None
 
-    def findswap(self,p,q,m,n):
-        g = Grid(1,1)
-        g1 = g.id_to_grid(p,m,n)
-        g2 = g.id_to_grid(q,m,n)
-        for i in range(m):
-            for j in range(n):
-                if g1.state[i][j] != g2.state[i][j]:
-                    
-
-    def path_to_swaplist(self,path): # Fonction finale qui récupère le plus court chemin dans le graphe et le conv en swaps
+    
