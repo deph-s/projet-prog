@@ -1,6 +1,7 @@
 import math
 from grid import Grid
-from graph import Graph, bfs
+from graph import Graph
+import heuristics
 
 class Solver(): 
     """
@@ -56,10 +57,15 @@ class Solver():
         path = state_graph.bfs(src,dst)
         return path
 
-    def get_solution(self,grid):
+    def get_solution(self,grid,heuristic):
         m,n = grid.m, grid.n
         g = Graph([])
         src, dst = grid.path_to_do()
-        path = g.bfs_a_star(src,dst,m,n,grid.manhattan_distance)
+        path = g.bfs_a_star(src,dst,m,n,heuristic)
         swap_list = g.path_to_swap(path,m,n)
         return swap_list
+
+s = Solver()
+g = Grid(3,3,[[9,8,7],[6,5,4],[3,2,1]])
+l = s.get_solution(g,heuristics.hash_h)
+print(l)

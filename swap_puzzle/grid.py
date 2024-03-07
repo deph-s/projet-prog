@@ -3,7 +3,6 @@ This is the grid module. It contains the Grid class and its associated methods.
 """
 
 import random
-import graph
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
@@ -175,7 +174,7 @@ class Grid():
     def nextperm(self,i,j): # Renvoie les grids que l'on peut obtenir en permutant la case i,j de la grid 
         swaps = []
         m,n = self.m, self.n
-        if(i<n-1):
+        if(i<m-1):
             g = self.copy()
             g.swap((i,j),(i+1,j))
             swaps.append(g.flatten())
@@ -183,7 +182,7 @@ class Grid():
             g = self.copy()
             g.swap((i,j),(i-1,j))
             swaps.append(g.flatten())
-        if(j<m-1):
+        if(j<n-1):
             g = self.copy()
             g.swap((i,j),(i,j+1))
             swaps.append(g.flatten())
@@ -207,14 +206,12 @@ class Grid():
 
     def id_to_grid(self,i,m,n): # Opération inverse de id pour créer les arêtes, i est l'entier représentant une grid
         newgrid = [[] for i in range(m)]
-        print(newgrid)
         for j in range(m):
             subgrid = []
             for k in range(n):
                 r = i % (m*n+1)
                 i -= r
                 i /= (m*n+1)
-                print(r)
                 subgrid.append(int(r)) # Cast esthétique parce que le typage est moche
             newgrid[j] = subgrid
         G = Grid(m,n,newgrid) # Faire attention, le poids faible est en premier et le poids fort en dernier dans la représentation
@@ -260,13 +257,3 @@ class Grid():
                     if j < m-1:
                         if g2.state[i][j] == g1.state[i][j-1]:
                             return ((i+1,j+1),(i+1,j+2))
-
-    def manhattan_distance(self,p,q,m,n):
-        g = Grid(1,1)
-        acc = 0 
-        g1 = g.id_to_grid(p,m,n)
-        g2 = g.id_to_grid(q,m,n)
-        for i in range(m):
-            for j in range(n):
-                acc += abs(g1.state[i][j] - g2.state[i][j])
-        return acc

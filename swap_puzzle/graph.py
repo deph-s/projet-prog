@@ -3,7 +3,7 @@ This is the graph module. It contains a minimalistic Graph class.
 """
 
 import heapq
-import grid
+from grid import Grid
 
 class Graph:
     """
@@ -211,7 +211,7 @@ class Graph:
     def bfs_a_star(self,src,dst,m,n,h): # h est l'heuristique à utiliser
         open_list = [(0,src)] # Création de la liste des sommets à considérer (file de prio) avec le sommet initial (distance 0)
         prev = {}
-        cost = {src: 0}
+        dist = {src: 0}
         g = Graph([])
         while(open_list):
             cur_cost, cur_node = heapq.heappop(open_list)
@@ -224,10 +224,10 @@ class Graph:
                 return path
             neighbours = g.get_neighbours(cur_node,m,n) # voisins du sommet qu'on récupère sous une forme de liste déjà hash
             for cost, ne in neighbours:
-                new_cost = cost[cur_node] + cost
-                if ne not in cost or new_cost < cost[ne]:
-                    cost[ne] = new_cost
-                    h_score = new_cost + h(ne,dst)
+                new_cost = dist[cur_node] + cost
+                if ne not in dist or new_cost < dist[ne]:
+                    dist[ne] = new_cost
+                    h_score = new_cost + h(ne,dst,m,n)
                     heapq.heappush(open_list,(h_score,ne)) # On utilise le h_score donné par l'heuristique pour classer
                     prev[ne] = cur_node
         return None
