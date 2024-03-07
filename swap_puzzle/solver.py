@@ -33,11 +33,11 @@ class Solver():
                                 x1 -=1
                         while x2 != x2f:
                             if x2 < x2f:
-                                self.swap((x1,x2),(x1,x2+1))
+                                grid.swap((x1,x2),(x1,x2+1))
                                 l.append(((x1,x2),(x1,x2+1)))
                                 x2 +=1
                             if x2 > x2f:
-                                self.swap((x1,x2),(x1,x2-1))
+                                grid.swap((x1,x2),(x1,x2-1))
                                 l.append(((x1,x2),(x1,x2-1)))
                                 x2 -=1
             N += 1 # Incrémenter N une fois qu'on a bien rangé la dalle en questions
@@ -64,8 +64,3 @@ class Solver():
         path = g.bfs_a_star(src,dst,m,n,heuristic)
         swap_list = g.path_to_swap(path,m,n)
         return swap_list
-
-s = Solver()
-g = Grid(3,3,[[9,8,7],[6,5,4],[3,2,1]])
-l = s.get_solution(g,heuristics.hash_h)
-print(l)

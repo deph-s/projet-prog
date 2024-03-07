@@ -100,6 +100,7 @@ class Grid():
             So the format should be [((i1, j1), (i2, j2)), ((i1', j1'), (i2', j2')), ...].
         """
         for swap in cell_pair_list:
+            print("swappy")
             self.swap(swap[0],swap[1])
 
     @classmethod
