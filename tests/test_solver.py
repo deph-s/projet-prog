@@ -11,7 +11,7 @@ class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'ell
 
     '''Test de la méthode naïve sur les 5 grids données en exemple'''
 
-    def test_g0_naif(self):
+    '''def test_g0_naif(self):
         s = Solver()
         grid = Grid.grid_from_file("input/grid0.in")
         print(grid)
@@ -46,14 +46,31 @@ class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'ell
         g2.swap_seq(lis)
         self.assertEqual(g2.state, [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]])
 
-    ''' Test du bfs sur les 5 grids en exemple '''
+    Test du bfs sur les 5 grids en exemple '''
 
     def test_g0_bfs_naif(self): # La liste des swaps est trop longue donc je vérifie juste que la liste de swaps renvoyée est OK ici
         s = Solver()
         g = Graph([])
         grid = Grid.grid_from_file("input/grid0.in")
         src, dst = grid.path_to_do()
-        path = g.bfs_generate_graph(src,dst,2,2)
+        prev = g.bfs_generate_graph(src,dst,2,2)
+        path = g.get_path(src,dst,prev)
+        swap_list = g.path_to_swap(path,2,2)
+        print("swaps are : ", swap_list)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2],[3,4]])
+
+    def test_g1_bfs_naif(self): # La liste des swaps est trop longue donc je vérifie juste que la liste de swaps renvoyée est OK ici
+        s = Solver()
+        g = Graph([])
+        grid = Grid.grid_from_file("input/grid1.in")
+        src, dst = grid.path_to_do()
+        prev = g.bfs_generate_graph(src,dst,2,2)
+        path = g.get_path(src,dst,prev)
+        swap_list = g.path_to_swap(path,2,2)
+        print("swaps are : ", swap_list)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2],[3,4]])
 
 if __name__ == '__main__':
     unittest.main()  

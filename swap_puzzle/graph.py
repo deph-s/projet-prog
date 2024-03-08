@@ -200,14 +200,6 @@ class Graph:
         neighbours = [(1,v) for v in neighbours] # Rend les états voisins hashable, coût de 1 entre sommets adj
         return neighbours
 
-    def manhattan_distance(g1,g2):
-        acc = 0 
-        m,n = g1.m, g1.n
-        for i in range(m):
-            for j in range(n):
-                acc += abs(g1.state[i][j] - g2.state[i][j])
-        return acc
-
     def bfs_a_star(self,src,dst,m,n,h): # h est l'heuristique à utiliser
         open_list = [(0,src)] # Création de la liste des sommets à considérer (file de prio) avec le sommet initial (distance 0)
         prev = {}

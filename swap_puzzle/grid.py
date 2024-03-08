@@ -247,13 +247,13 @@ class Grid():
                 if g1.state[i][j] != g2.state[i][j]:
                     if i > 0:
                         if g2.state[i-1][j] == g1.state[i][j]:
-                            return ((i,j+1),(i+1,j+1))
+                            return ((i-1,j),(i,j))
                     if i < m-1:
                         if g2.state[i][j] == g1.state[i+1][j]:
-                            return ((i+1,j+1),(i+2,j+1))
+                            return ((i,j),(i+1,j))
                     if j > 0:
                         if g2.state[i][j] == g1.state[i][j-1]:
-                            return ((i+1,j),(i+1,j+1))
+                            return ((i,j-1),(i,j))
                     if j < m-1:
                         if g2.state[i][j] == g1.state[i][j-1]:
-                            return ((i+1,j+1),(i+1,j+2))
+                            return ((i,j),(i,j+1))
