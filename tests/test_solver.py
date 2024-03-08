@@ -6,22 +6,21 @@ import unittest
 from solver import Solver
 from grid import Grid
 from graph import Graph
+import heuristics
 
 class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'elle même donc on teste 2 paramètres
 
     '''Test de la méthode naïve sur les 5 grids données en exemple'''
 
-    '''def test_g0_naif(self):
+    def test_g0_naif(self):
         s = Solver()
         grid = Grid.grid_from_file("input/grid0.in")
-        print(grid)
         lis = s.get_sol_naive(grid)
         self.assertEqual((grid.state, lis), ([[1,2],[3,4]], [((1, 1), (0, 1)), ((0, 1), (0, 0))]))
 
     def test_g1_naif(self):
         s = Solver()
         grid = Grid.grid_from_file("input/grid1.in")
-        print(grid)
         lis = s.get_sol_naive(grid)
         self.assertEqual((grid.state, lis), ([[1,2],[3,4],[5,6],[7,8]], [((3,1),(3,0))]))
     
@@ -35,7 +34,6 @@ class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'ell
         s = Solver()
         grid = Grid.grid_from_file("input/grid3.in")
         lis = s.get_sol_naive(grid)
-        print("swap : ", lis)
         self.assertEqual((grid.state, lis), ([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]], [((1, 0), (0, 0)), ((1, 2), (0, 2)), ((3, 1), (2, 1)), ((3, 2), (2, 2))]))
     
     def test_g4_naif(self): # La liste des swaps est trop longue donc je vérifie juste que la liste de swaps renvoyée est OK ici
@@ -46,9 +44,15 @@ class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'ell
         g2.swap_seq(lis)
         self.assertEqual(g2.state, [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]])
 
-    Test du bfs sur les 5 grids en exemple '''
 
-    def test_g0_bfs_naif(self): # La liste des swaps est trop longue donc je vérifie juste que la liste de swaps renvoyée est OK ici
+    ''' 
+    
+    Test du bfs naïf sur les grids en exemple, pas de bench pour des tailles 3*3+ car ça devient très très long
+    
+    '''
+
+
+    def test_g0_bfs_naif(self):
         s = Solver()
         g = Graph([])
         grid = Grid.grid_from_file("input/grid0.in")
@@ -56,38 +60,76 @@ class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'ell
         prev = g.bfs_generate_graph(src,dst,2,2)
         path = g.get_path(src,dst,prev)
         swap_list = g.path_to_swap(path,2,2)
-        print("swaps are : ", swap_list)
         grid.swap_seq(swap_list)
         self.assertEqual(grid.state,[[1,2],[3,4]])
 
-    def test_g1_bfs_naif(self): # La liste des swaps est trop longue donc je vérifie juste que la liste de swaps renvoyée est OK ici
+    '''def test_g1_bfs_naif(self):
         s = Solver()
         g = Graph([])
         grid = Grid.grid_from_file("input/grid1.in")
         src, dst = grid.path_to_do()
-        prev = g.bfs_generate_graph(src,dst,2,2)
+        prev = g.bfs_generate_graph(src,dst,4,2)
         path = g.get_path(src,dst,prev)
+        swap_list = g.path_to_swap(path,4,2)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2],[3,4],[5,6],[7,8]])'''
+
+    '''def test_g2_bfs_naif(self):
+        s = Solver()
+        g = Graph([])
+        grid = Grid.grid_from_file("input/grid2.in")
+        src, dst = grid.path_to_do()
+        prev = g.bfs_generate_graph(src,dst,3,3)
+        path = g.get_path(src,dst,prev)
+        swap_list = g.path_to_swap(path,3,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9]])'''
+
+    ''' 
+    
+    Test du bfs A* sur les grids en exemple, pas de bench pour des tailles 4*4+ car ça devient très très long
+    
+    '''
+
+    def test_g0_a_star(self):
+        s = Solver()
+        g = Graph([])
+        grid = Grid.grid_from_file("input/grid0.in")
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,2,2,heuristics.manhattan_distance)
         swap_list = g.path_to_swap(path,2,2)
-        print("swaps are : ", swap_list)
         grid.swap_seq(swap_list)
         self.assertEqual(grid.state,[[1,2],[3,4]])
 
+    def test_g1_a_star(self):
+        s = Solver()
+        g = Graph([])
+        grid = Grid.grid_from_file("input/grid1.in")
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,4,2,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,4,2)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2],[3,4],[5,6],[7,8]])
+
+    def test_g2_a_star(self):
+        s = Solver()
+        g = Graph([])
+        grid = Grid.grid_from_file("input/grid2.in")
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,3,3,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,3,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9]])
+    
+    '''def test_g3_a_star(self):
+        s = Solver()
+        g = Graph([])
+        grid = Grid.grid_from_file("input/grid3.in")
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,4,4,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,4,4)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]])'''
+
 if __name__ == '__main__':
     unittest.main()  
-
-class Test_Solver(unittest.TestCase):
-    def test_sol2(self):
-        G = Grid(2,2,[[1,2],[3,4]])
-        graph = G.graph_from_grid()
-        self.assertEqual(graph.nb_nodes, 24) # Tester qu'on a bien créé tous les sommets (4! = 24 états de la grid possible)
-        self.assertEqual(graph.nb_edges, 96) # Chaque sommet a 4 arêtes ici
-
-class Test_Solver(unittest.TestCase):
-    def test_sol_bfs(self):
-        grid = Grid(2,2,[[1,3],[2,4]])
-        g = Graph([])
-        src, dst = grid.path_to_do()
-        path = g.bfs_generate_graph(src,dst,2,2)
-        swap_list = g.path_to_swap(path,2,2)
-        grid.swap_seq(swap_list)
-        self.assertEqual(grid.state, [[1,2],[3,4]])
