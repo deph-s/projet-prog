@@ -154,7 +154,7 @@ class Grid():
         plt.title('Grid :')
         frame1 = plt.gca()
         frame1.axes.get_xaxis().set_visible(False)
-        frame1.axes.get_yaxis().set_visible(False) # Pour faire disparâitre les indices x et y qui ne servent pas
+        frame1.axes.get_yaxis().set_visible(False) # Pour faire disparaitre les indices x et y qui ne servent pas
         plt.show()
         
     def copy(self):    # Fonction utilitaire pour ajouter les arêtes entre sommets par la suite
