@@ -10,7 +10,23 @@ import heuristics
 
 class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'elle même donc on teste 2 paramètres
 
-    '''Test de la méthode naïve sur les 5 grids données en exemple'''
+    '''Tests sur les fonctions de base '''
+
+    def test_is_sorted(self):
+        g = Grid(2,2,[[1,2],[3,4]])
+        self.assertEqual(g.is_sorted(), True)
+
+    def test_swap_seq(self):
+        g = Grid(2,2,[[1,2],[3,4]])
+        l = [((0,1),(1,1)),((0,0),(1,0))]
+        g.swap_seq(l)
+        self.assertEqual(g.state, [[3,4],[1,2]])
+
+    '''
+    
+    Test de la méthode naïve sur les 5 grids données en exemple
+    
+    '''
 
     def test_g0_naif(self):
         s = Solver()
