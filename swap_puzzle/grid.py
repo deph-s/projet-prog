@@ -144,18 +144,19 @@ class Grid():
                 l.append(j)
         return l
     
-    def show_grid(self): # Fonction qui apparaît un peu tard dans le code pour utiliser flatten
+    def show_grid(self): 
         m,n = self.m, self.n
         cmap = plt.get_cmap('plasma') # Juste pour faire des jolies couleurs, gradient par défaut qui rend bien
-        grid = self.flatten()
-        plt.imshow(grid, cmap=cmap, interpolation='nearest')
+        plt.imshow(self.state, cmap=cmap, interpolation='nearest')
         for i in range(m):
             for j in range(n):
-                plt.text(j, i, grid[i][j], ha='center', va='center', color='white')
+                plt.text(j, i, self.state[i][j], ha='center', va='center', color='white')
         plt.title('Grid :')
+        frame1 = plt.gca()
+        frame1.axes.get_xaxis().set_visible(False)
+        frame1.axes.get_yaxis().set_visible(False) # Pour faire disparâitre les indices x et y qui ne servent pas
         plt.show()
         
-
     def copy(self):    # Fonction utilitaire pour ajouter les arêtes entre sommets par la suite
         cpy_state = []
         for l in self.state:
@@ -257,3 +258,33 @@ class Grid():
                     if j < m-1:
                         if g2.state[i][j] == g1.state[i][j-1]:
                             return ((i,j),(i,j+1))
+
+    def generate_grid(self,difficulty): # difficulty est un entier de 1 à 3 représentant la difficulté à résoudre la grille
+        m,n = self.m, self.n
+        values = [i for i in range(1,m*n+1)]
+        for i in range(m):
+            for j in range(n):
+                r = random.randint(0,len(values)-1)
+                self.state[i][j] = values[r]
+                values.remove(values[r])
+        if difficulty == 1:
+            for i in range(3): # En difficulté facile on ne fait que 3 échanges aléatoires sur la grille de base
+                r1, r2 = random.randint(0,m-1), random.randint(0,n-1)
+                r3, r4 = random.randint(0,m-1), random.randint(0,n-1)
+                buff = self.state[r1][r2]
+                self.state[r1][r2] = self.state[r3][r4]
+                self.state[r3][r4] = buff
+        elif difficulty == 2:
+            for i in range(5): # En difficulté moyenne, 5 échanges aléatoires sur la grille de base
+                r1, r2 = random.randint(0,m-1), random.randint(0,n-1)
+                r3, r4 = random.randint(0,m-1), random.randint(0,n-1)
+                buff = self.state[r1][r2]
+                self.state[r1][r2] = self.state[r3][r4]
+                self.state[r3][r4] = buff
+        else:
+            for i in range(10): # En difficile, 10 échanges
+                r1, r2 = random.randint(0,m-1), random.randint(0,n-1)
+                r3, r4 = random.randint(0,m-1), random.randint(0,n-1)
+                buff = self.state[r1][r2]
+                self.state[r1][r2] = self.state[r3][r4]
+                self.state[r3][r4] = buff

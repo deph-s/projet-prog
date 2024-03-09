@@ -130,6 +130,78 @@ class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'ell
         swap_list = g.path_to_swap(path,4,4)
         grid.swap_seq(swap_list)
         self.assertEqual(grid.state,[[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]])'''
+    
+    ''' 
+    
+    Tests supplémentaires du A* sur des grid générées par niveau de difficulté : 
+    
+    '''
+
+    def test_diff1_a_star(self): # Difficulté facile (niveau 1/3)
+        s = Solver()
+        g = Graph([])
+        grid = Grid(3,3)
+        grid.generate_grid(1) # Niveau 1
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,3,3,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,3,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9]])
+
+    def test_diff2_a_star(self): # Difficulté moyenne (niveau 2/3)
+        s = Solver()
+        g = Graph([])
+        grid = Grid(3,3)
+        grid.generate_grid(2) # Niveau 2
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,3,3,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,3,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9]])
+
+    def test_diff3_a_star(self): # Difficulté difficile (niveau 3/3)
+        s = Solver()
+        g = Graph([])
+        grid = Grid(3,3)
+        grid.generate_grid(2) # Niveau 3
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,3,3,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,3,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9]])
+
+    def test_diff3_a_star2(self): # Difficulté facile sur des grids un peu plus grandes (4 * 3) (niveau 1/3)
+        s = Solver()
+        g = Graph([])
+        grid = Grid(4,3)
+        grid.generate_grid(1) # Niveau 1
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,4,3,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,4,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9],[10,11,12]])
+
+    def test_diff3_a_star3(self): # Difficulté facile sur des grids un peu plus grandes (4 * 3) (niveau 2/3)
+        s = Solver()
+        g = Graph([])
+        grid = Grid(4,3)
+        grid.generate_grid(2) # Niveau 2
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,4,3,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,4,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9],[10,11,12]])
+    
+    def test_diff3_a_star4(self): # Difficulté facile sur des grids un peu plus grandes (4 * 3) (niveau 2/3)
+        s = Solver()
+        g = Graph([])
+        grid = Grid(4,3)
+        grid.generate_grid(3) # Niveau 3
+        src, dst = grid.path_to_do()
+        path = g.bfs_a_star(src,dst,4,3,heuristics.manhattan_distance)
+        swap_list = g.path_to_swap(path,4,3)
+        grid.swap_seq(swap_list)
+        self.assertEqual(grid.state,[[1,2,3],[4,5,6],[7,8,9],[10,11,12]])
 
 if __name__ == '__main__':
     unittest.main()  
