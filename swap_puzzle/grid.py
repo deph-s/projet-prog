@@ -164,7 +164,7 @@ class Grid():
         g = Grid(self.m,self.n,cpy_state)
         return g
 
-    def permutations(self,l): # Calcule les permutations de la grid que l'on a flatten pour créer tous les sommets
+    def permutations(self,l): # Calcule les permutations de la grid que l'on a flatten pour créer tous les sommets, inutile maintenant
         if len(l) <= 1:
             yield l
             return

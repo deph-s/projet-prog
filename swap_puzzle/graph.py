@@ -164,12 +164,6 @@ class Graph:
                 else:
                     raise Exception("Format incorrect")
         return graph
-    
-    def fact(self,n): # Pour calculer la taille maximale du graphe et la taille des listes des parents et des sommets explorés
-        if n == 0:
-            return 1
-        else:
-            return n*self.fact(n-1)
 
     def bfs_generate_graph(self,src,dst,m,n):
         maxsize = (m*n+1)**(m*n+1)
