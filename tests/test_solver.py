@@ -10,7 +10,11 @@ import heuristics
 
 class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'elle même donc on teste 2 paramètres
 
-    '''Tests sur les fonctions de base '''
+    '''
+    
+    Tests sur les fonctions de base 
+    
+    '''
 
     def test_is_sorted(self):
         g = Grid(2,2,[[1,2],[3,4]])
@@ -22,8 +26,30 @@ class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'ell
         g.swap_seq(l)
         self.assertEqual(g.state, [[3,4],[1,2]])
 
+    ''' 
+
+    Test du bfs
+    
     '''
     
+    def test_bfs(self): # Je teste le parcours seulement sur les chemins entre les dix premiers sommets du graphe
+        g1 = Graph.graph_from_file("input/graph1.in")
+        g2 = Graph.graph_from_file("input/graph2.in")
+        l1 = [[1, 2],[1,15,3],[1,4],[1,5],[1,8,6],[1,15,12,7],[1,8],[1,9],[1,10]]
+        l2 = [None,None,None,None,None,None,[1,8],None,None]
+        b = True
+        for i in range(1,10):
+            path = g1.bfs(1,i+1)
+            if path != l1[i-1]:
+                b = False
+        for i in range(1,10):
+            path = g2.bfs(1,i+1)
+            if path != l2[i-1]:
+                b = False
+        self.assertEqual(b,True)
+
+    ''' 
+
     Test de la méthode naïve sur les 5 grids données en exemple
     
     '''
