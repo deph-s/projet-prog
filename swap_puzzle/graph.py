@@ -2,7 +2,7 @@
 This is the graph module. It contains a minimalistic Graph class.
 """
 
-import heapq
+import heapq # Pour le A*
 from grid import Grid
 
 class Graph:
@@ -90,10 +90,10 @@ class Graph:
         explored = [False for i in range(self.nb_nodes)] 
         explored[src-1] = True
         queue.append(src)
-        while not(len(queue) == 0):
+        while not(len(queue) == 0): # On continue d'explorer tant qu'on n'a pas tout vu
             v = queue.pop(0)
             if v == dst:
-                return prev
+                return prev # Si on trouve le sommet destination pas besoin de chercher plus on peut remonter à la racine
             for n in self.graph[v]:
                 if not(explored[n-1]):
                     explored[n-1] = True
@@ -111,7 +111,7 @@ class Graph:
         path.reverse()
         return path
 
-    def bfs(self, src, dst): 
+    def bfs(self, src, dst): # La fonctions bfs en elle même est plus une fonction auxiliaire, c'est bfs_aux le coeur du bfs
         """
         Finds a shortest path from src to dst by BFS.  
 
@@ -127,11 +127,11 @@ class Graph:
         path: list[NodeType] | None
             The shortest path from src to dst. Returns None if dst is not reachable from src
         """ 
-        prev = self.bfs_aux(src,dst)
+        prev = self.bfs_aux(src,dst) # On récupère juste la liste des parents obtenue à partir de bfs_aux que l'on traite
         if prev != []:
             return self.get_path(src,dst,prev)
         else:
-            print("Pas de chemin entre les deux sommets entrés")
+            print("Pas de chemin entre les deux sommets entrés") # Revient à retourner un None, cela passe le test pour le graph2
 
     @classmethod
     def graph_from_file(cls, file_name):
@@ -166,18 +166,18 @@ class Graph:
         return graph
 
     def bfs_generate_graph(self,src,dst,m,n):
-        maxsize = (m*n+1)**(m*n+1)
+        maxsize = (m*n+1)**(m*n+1) # Borne supérieure un peu grossière sur les entiers générés par la fonction de hashage
         g = Grid(m,n)
         queue = []
-        prev = [-1 for i in range(maxsize)]
+        prev = [-1 for i in range(maxsize)] # Pas très optimisé... 
         explored = []
         explored.append(src-1)
         queue.append(src)
-        while not(len(queue) == 0):
+        while not(len(queue) == 0): # Le principe est le même que le bfs usuel maintenant
             v = queue.pop(0)
             if v == dst:
                 return prev
-            cur_grid = g.id_to_grid(v,m,n) # Calcul de la grid actuelle
+            cur_grid = g.id_to_grid(v,m,n) # Calcul de la grid actuelle (on passe du hash (un entier) à un élément de type Grid)
             neighbours = cur_grid.adj_grids() # Calcul des grids voisines de la grid actuelle
             neighbours = [g.id_to_grid(v,m,n) for v in neighbours] # Rend les états voisins hashable
             for ne in neighbours:
@@ -187,18 +187,18 @@ class Graph:
                     prev[g.id(ne.flatten())-1] = v
         return []
 
-    def get_neighbours(self,v,m,n):
-        g = Grid(m,n)
+    def get_neighbours(self,v,m,n): # La fonction est celle que l'on utilise dans le A*, elle allège le code mais fait la même 
+        g = Grid(m,n)               # chose que dans le bfs classique (les lignes sont copiées sauf l'avant dernière)
         cur_grid = g.id_to_grid(v,m,n) # Calcul de la grid actuelle
         neighbours = cur_grid.adj_grids() # Calcul des grids voisines de la grid actuelle
-        neighbours = [(1,v) for v in neighbours] # Rend les états voisins hashable, coût de 1 entre sommets adj
+        neighbours = [(1,v) for v in neighbours] # Rend les états voisins hashable, coût de 1 entre sommets adj pour le A*
         return neighbours
 
     def bfs_a_star(self,src,dst,m,n,h): # h est l'heuristique à utiliser
         open_list = [(0,src)] # Création de la liste des sommets à considérer (file de prio) avec le sommet initial (distance 0)
-        prev = {}
-        dist = {src: 0}
-        g = Graph([])
+        prev = {}             # Dans la file de priorité les sommets sont stockés sont la forme (dst, sommet)
+        dist = {src: 0}       # L'utilisation d'un dictionnaire nous fait gagner du temps comme les sommets sont hash, il sert à
+        g = Graph([])         # la fois à stocker les distances au sommet source mais aussi à savoir si un sommet a déjà été vu
         while(open_list):
             cur_cost, cur_node = heapq.heappop(open_list)
             if cur_node == dst:
@@ -206,20 +206,20 @@ class Graph:
                 while cur_node in prev: # Permet de faire une boucle de manière intelligente sur le dictionnaire puisque  on va automatiquement s'arrêter quand on atteint src parce qu'il n'a pas de parent
                     cur_node = prev[cur_node]
                     path.append(cur_node)
-                path.reverse()
+                path.reverse() # Linéaire en la taille du chemin
                 return path
             neighbours = g.get_neighbours(cur_node,m,n) # voisins du sommet qu'on récupère sous une forme de liste déjà hash
             for cost, ne in neighbours:
-                new_cost = dist[cur_node] + cost
-                if ne not in dist or new_cost < dist[ne]:
+                new_cost = dist[cur_node] + cost # On met à jour les distances, cost vaut toujours 1 ici en réalité
+                if ne not in dist or new_cost < dist[ne]: # Si on trouve un meilleur chemin on update la distance à src
                     dist[ne] = new_cost
-                    h_score = new_cost + h(ne,dst,m,n)
+                    h_score = new_cost + h(ne,dst,m,n) # h_score seulement considéré pour la file de priorité
                     heapq.heappush(open_list,(h_score,ne)) # On utilise le h_score donné par l'heuristique pour classer
                     prev[ne] = cur_node
         return None
 
-    def path_to_swap(self,path,m,n):
-        g = Grid(1,1)
+    def path_to_swap(self,path,m,n): # Fonction auxiliaire qui renvoie la liste de swap à effectuer à partir d'un chemin dans le
+        g = Grid(1,1)                # graphe, prend en argument le chemin (une suite de grilles)
         swap_list = []
         for i in range(len(path)-1):
             swap = g.findswap(path[i],path[i+1],m,n)

@@ -8,6 +8,9 @@ from grid import Grid
 from graph import Graph
 import heuristics
 
+''' Fichier regroupant tous les tests de diverses fonctions, certains tests sont commentés car leur temps d'exécution devient 
+très long'''
+
 class Test_Solver(unittest.TestCase): # La sol naïve fait aussi les swaps d'elle même donc on teste 2 paramètres
 
     '''

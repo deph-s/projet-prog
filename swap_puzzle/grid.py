@@ -6,7 +6,7 @@ import random
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
-class IllegalMove(Exception):
+class IllegalMove(Exception): # On crée une exception pour les coups qui ne sont pas autorisés
     pass
 
 class Grid():
@@ -66,10 +66,10 @@ class Grid():
         for i in range(m):
             for j in range(n):
                 if j < n-1:
-                    if self.state[i][j] + 1 != self.state[i][j+1]:
-                        return False
+                    if self.state[i][j] + 1 != self.state[i][j+1]: # Si trié on a toujours un décalage de + 1 entre la tuile actu-
+                        return False                               # -elle et celle qui la suite
                 elif i < m-1:
-                    if self.state[i][j] + 1 != self.state[i+1][0]:
+                    if self.state[i][j] + 1 != self.state[i+1][0]: # On prend en compte le saut de ligne
                         return False
         return True
 
@@ -84,7 +84,7 @@ class Grid():
         """
         if abs(cell1[0] - cell2[0]) + abs(cell1[1] - cell2[1]) == 1:  # teste si on swap bien deux cases distinctes et adjacentes
             buff = self.state[cell1[0]][cell1[1]]
-            self.state[cell1[0]][cell1[1]] = self.state[cell2[0]][cell2[1]]
+            self.state[cell1[0]][cell1[1]] = self.state[cell2[0]][cell2[1]] 
             self.state[cell2[0]][cell2[1]] = buff
         else:
             raise IllegalMove
@@ -99,7 +99,7 @@ class Grid():
             List of swaps, each swap being a tuple of two cells (each cell being a tuple of integers). 
             So the format should be [((i1, j1), (i2, j2)), ((i1', j1'), (i2', j2')), ...].
         """
-        for swap in cell_pair_list:
+        for swap in cell_pair_list: # On effectue simplement les swaps à la suite
             self.swap(swap[0],swap[1])
 
     @classmethod
@@ -134,8 +134,8 @@ class Grid():
         m = self.m
         n = self.n
         base = m*n+1
-        return sum(l[i]*(base)**i for i in range(len(l))) # Identifiant unique hashable
-
+        return sum(l[i]*(base)**i for i in range(len(l))) # Identifiant unique hashable, le code pour implémenter sum est donné en
+                                                          # appendix du rapport
     def flatten(self): # Permet de convertir la grid de base en une seule list de taille m*n et de calculer ses permutations 
         l = []
         m = self.m
@@ -164,13 +164,15 @@ class Grid():
         g = Grid(self.m,self.n,cpy_state)
         return g
 
-    def permutations(self,l): # Calcule les permutations de la grid que l'on a flatten pour créer tous les sommets, inutile maintenant
+    ''' La fonction suivante ne sert plus car elle servait à générer tout le graphe d'un coup '''
+
+    '''def permutations(self,l): # Calcule les permutations de la grid que l'on a flatten pour créer tous les sommets, inutile maintenant
         if len(l) <= 1:
             yield l
             return
         for perm in self.permutations(l[1:]):
             for i in range(len(l)):
-                yield perm[:i] + l[0:1] + perm[i:]
+                yield perm[:i] + l[0:1] + perm[i:]'''
 
     def nextperm(self,i,j): # Renvoie les grids que l'on peut obtenir en permutant la case i,j de la grid 
         swaps = []
@@ -219,7 +221,9 @@ class Grid():
         return G              # en base m*n+1 donc pour le nombre 123456789 (base 10) le poids faible est 9 et le fort est 1 
                               # Donc la grid renvoyée est [[9, 8, 7], [6, 5, 4], [3, 2, 1]] et non l'inverse
 
-    def graph_from_grid(self):
+    ''' Fonction qui génère tout le graphe d'un coup'''
+
+    '''def graph_from_grid(self):
         m = self.m
         n = self.n
         v_ = [l for l in self.permutations(self.flatten())]
@@ -230,7 +234,7 @@ class Grid():
             adj_grids = state.adj_grids()
             for v in adj_grids:
                 G.add_edge(node,v)
-        return G
+        return G'''
 
     def path_to_do(self): # Renvoie l'id du sommet initial et du sommet d'arrivée dans le graph des états pour bfs
         m,n = self.m, self.n 
@@ -240,8 +244,8 @@ class Grid():
         src = self.id(l)
         return src,dst
     
-    def findswap(self,p,q,m,n): # Renvoie le premier swap entre deux grids trouvé
-        g1 = self.id_to_grid(p,m,n)
+    def findswap(self,p,q,m,n): # Renvoie le premier swap entre deux grids trouvé, dans le path, on est garanti que les grid sont
+        g1 = self.id_to_grid(p,m,n) # adjacentes donc le premier swap trouvé est bien l'unique swap entre les deux grilles
         g2 = self.id_to_grid(q,m,n)
         for i in range(m):
             for j in range(n):
